@@ -7,6 +7,8 @@ let imgThree = "./images/img3.png";
 let imgFour = "./images/img4.png";
 let imgSecret = "./images/secret.png";
 
+let secretProbability;
+
 //booleans to handle if a fungi has been unboxed or not
 let imgOneUnboxed = false;
 let imgTwoUnboxed = false;
@@ -22,6 +24,8 @@ const fungiImages = [
   "./images/img4.png",
   "./images/secret.png",
 ];
+
+const unboxedImages = [];
 
 //Initialize and connect socket
 let socket = io();
@@ -40,7 +44,6 @@ socket.on("message-share", (data) => {
 
 let unboxFungiButton = document.querySelector("#unbox-button");
 unboxFungiButton.addEventListener("click", function () {
-  console.log("this has been clicked");
   showPopup();
 });
 
@@ -51,12 +54,29 @@ const showPopup = () => {
   let overlay = document.getElementById("overlay");
   overlay.style.visibility = "visible";
 
+  //pop off old image
+  const oldImage = popup.querySelector("img");
+  if (oldImage) oldImage.remove();
+
   //choose random image using chance library
-  let randomFungi = chance.weighted(fungiImages, [1, 1, 1, 1, 0.01612903225]);
+  // probability = 0.01612903225; - can work on making this a slider that the users can control to highlight the way that this mechanism works and how hard it really is to get the secrets
+  secretProbability = 0.5;
+  let randomFungi = chance.weighted(fungiImages, [
+    1,
+    1,
+    1,
+    1,
+    secretProbability,
+  ]);
   console.log(randomFungi);
 
-  //display results in popup window
+  const unboxedImage = document.querySelector(`img[src='${randomFungi}']`);
+  unboxedImage.classList.add("unboxed");
 
+  unboxedImages.push(randomFungi);
+  console.log("unboxed images:" + unboxedImages);
+
+  //display results in popup window
   let fungiImagePick = document.createElement("img");
   fungiImagePick.src = randomFungi;
   fungiImagePick.width = 200;
@@ -68,12 +88,8 @@ const showPopup = () => {
 
   let continueButton = document.getElementById("continue_button");
   continueButton.addEventListener("click", function () {
-    // location.reload();
     popup.style.visibility = "hidden";
     overlay.style.visibility = "hidden";
-    // const elementToRemove = document.getElementById("#img");
-    // elementToRemove.remove();
-    document.getElementById("#pop_up").clear();
   });
 };
 
