@@ -7,6 +7,8 @@ let imgTwo = "./images/img2.png";
 // let imgFour = "./images/img4.png";
 // let imgSecret = "./images/secret.png";
 
+let popup = document.getElementById("center_popup");
+
 let secretProbability;
 
 // Array of fungi cohort - update this as appropriate!
@@ -42,7 +44,6 @@ unboxFungiButton.addEventListener("click", function () {
 });
 
 const showPopup = () => {
-  let popup = document.getElementById("center_popup");
   popup.style.visibility = "visible";
 
   let overlay = document.getElementById("overlay");
@@ -72,22 +73,21 @@ const showPopup = () => {
 
   //not doing anything currently, figure out if this is even necessary
   // let resultDisplayOne = document.getElementById("popup_text");
-
-  let continueButton = document.getElementById("continue_button");
-  continueButton.addEventListener("click", function () {
-    popup.style.visibility = "hidden";
-    overlay.style.visibility = "hidden";
-
-    hasCollectedAll =
-      fungiImages.filter((x) => unboxedImages.includes(x)).length ==
-      fungiImages.length;
-
-    if (hasCollectedAll == true) {
-      //currently logging it for every item in the array, only want it happening once
-      // console.log("you've caught them all");
-      // alert("you've caught them all");
-      // location.reload();
-    }
-    console.log(hasCollectedAll);
-  });
 };
+
+let continueButton = document.getElementById("continue_button");
+continueButton.addEventListener("click", function () {
+  popup.style.visibility = "hidden";
+  overlay.style.visibility = "hidden";
+
+  //see if all the characters have been unboxed. when they have, display a "yay, you've caught them all message"
+  hasCollectedAll =
+    fungiImages.filter((x) => unboxedImages.includes(x)).length ==
+    fungiImages.length;
+
+  if (hasCollectedAll == true) {
+    alert("you've caught them all!!");
+    location.reload();
+  }
+  console.log(hasCollectedAll);
+});
